@@ -1,0 +1,36 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use feature 'say';
+
+use App::Options(
+    option => {
+        dryrun => { tyee => 'bool', required => 0, default => 0 },
+        remote => { type => 'bool', required => 0, default => 0},
+        ignore => { type => 'string', required => 0 },
+    },
+);
+my %argv = %App::options;
+
+my @branches = split /\n/, `git branch --merged`;
+
+@branches = grep { $_ =~ /^ / } @branches;
+@branches = map  { my $b = $_; $b =~ s/^ +(.+)/$1/; $b } @branches;
+
+if ($argv{ignore}) {
+    my $ignores = [ split ',', $argv{ignore} ];
+    @branches = grep { ! ($_ ~~ [ qw/add-stamps-for-store/ ]) } @branches;
+}
+
+for my $branch (@branches) {
+    say $branch;
+
+    next if $argv{dryrun};
+
+    `git branch -d $branch`;
+
+    next unless $argv{remote};
+
+    `git push origin :$branch`
+}

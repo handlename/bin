@@ -1,0 +1,34 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use feature 'say';
+
+use Net::Twitter;
+
+use App::Options(
+    option => {
+        consumer_key    => { type => 'string', required => 1 },
+        consumer_secret => { type => 'string', required => 1 },
+    },
+);
+my %opts = %App::options;
+
+
+
+my $twitter = Net::Twitter->new(
+    traits          => [ 'API::REST', 'OAuth' ],
+    consumer_key    => $opts{consumer_key},
+    consumer_secret => $opts{consumer_secret},
+);
+
+my $url = $twitter->get_authorization_url();
+`open ${url}`;
+
+print 'pin: ';
+my $pin = <STDIN>;
+chomp $pin;
+
+my ($token, $token_secret) = $twitter->request_access_token(verifier => $pin);
+say "token: ${token}";
+say "token_secret: ${token_secret}";

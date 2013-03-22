@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ ! -e '/tmp/mnt' ] ; then
+    echo 'no tmp disk "/tmp/mnt"';
+    exit;
+fi
+
+TMPDIR=/tmp/mnt prove $@
