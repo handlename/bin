@@ -6,7 +6,7 @@ use feature 'say';
 
 use App::Options(
     option => {
-        dryrun => { tyee => 'bool', required => 0, default => 0 },
+        dryrun => { type => 'bool', required => 0, default => 0 },
         remote => { type => 'bool', required => 0, default => 0},
         ignore => { type => 'string', required => 0 },
     },
