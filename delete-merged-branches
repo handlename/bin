@@ -20,7 +20,7 @@ my @branches = split /\n/, `git branch --merged`;
 
 if ($argv{ignore}) {
     my $ignores = [ split ',', $argv{ignore} ];
-    @branches = grep { ! ($_ ~~ [ qw/add-stamps-for-store/ ]) } @branches;
+    @branches = grep { ! ($_ ~~ $ignores) } @branches;
 }
 
 for my $branch (@branches) {
